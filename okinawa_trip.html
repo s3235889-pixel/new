@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="color-scheme" content="light" />
+  <title>沖繩 7 天 6 夜自駕行程｜蛋奶素旅行規劃</title>
+  <style>
+
+    :root{
+      --paper:#f6f3ec;
+      --paper-2:#fbfaf6;
+      --card:#fffefa;
+      --ink:#292a27;
+      --muted:#77756e;
+      --line:#d9d3c7;
+      --line-soft:#e9e4da;
+      --indigo:#405268;
+      --indigo-deep:#2f3c4d;
+      --vermillion:#a65443;
+      --moss:#65705b;
+      --sand:#a68f6f;
+      --gold:#b09b75;
+      --warn:#8b6738;
+      --danger:#8b5148;
+      --sea:#e9f0f1;
+      --island:#dde4d9;
+      --shadow:0 8px 28px rgba(46,43,36,.055);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;background:#e9e5dc}
+    body{
+      font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans TC","PingFang TC",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at 10% 0%,rgba(255,255,255,.72),transparent 30%),
+        linear-gradient(180deg,var(--paper-2) 0,var(--paper) 46%,#f2efe8 100%);
+      color:var(--ink);max-width:780px;margin:0 auto;padding:24px 18px 34px;line-height:1.72;
+      min-height:100vh;
+    }
+    button,input{font:inherit}
+    a{color:inherit}
+    button,a{-webkit-tap-highlight-color:transparent}
+
+    header{text-align:left;padding:15px 3px 23px;border-bottom:1px solid var(--line);margin-bottom:18px;position:relative}
+    header:before{content:"OKINAWA  ·  ROAD JOURNEY";display:block;color:var(--sand);font-family:Georgia,"Times New Roman",serif;font-size:.68rem;letter-spacing:.22em;margin-bottom:10px}
+    header:after{content:"";position:absolute;bottom:-1px;left:3px;width:52px;height:2px;background:var(--vermillion)}
+    h1{font-family:"Yu Mincho","Hiragino Mincho ProN","Noto Serif TC",serif;font-size:1.7rem;font-weight:600;letter-spacing:.055em;color:var(--ink);margin-bottom:7px}
+    .subtitle{font-size:.82rem;letter-spacing:.035em;color:var(--muted)}
+    .updated{margin-top:10px;display:inline-flex;align-items:center;border:0;border-left:2px solid var(--gold);border-radius:0;padding:1px 0 1px 9px;font-size:.7rem;color:#8a8377;background:transparent}
+
+    .notice{background:rgba(255,254,250,.74);border:1px solid var(--line);border-radius:3px;padding:14px 15px;margin-bottom:16px;font-size:.82rem;color:#5a554d;box-shadow:none}
+    .notice strong{color:var(--ink);font-weight:700}
+    .jp-card{margin-top:10px;background:#f2eee5;border:0;border-left:2px solid var(--sand);border-radius:0;padding:9px 11px;color:#625d54;display:flex;gap:9px;align-items:flex-start}
+    .jp-card code{white-space:normal;font-family:"Yu Gothic","Hiragino Sans",sans-serif;font-size:.78rem;line-height:1.65;font-weight:600;color:#514d46}
+
+    .mode-switch{display:grid;grid-template-columns:1fr 1fr;background:transparent;border:1px solid var(--line);border-radius:3px;padding:3px;margin-bottom:14px;gap:3px}
+    .mode-btn{border:0;background:transparent;border-radius:1px;padding:10px 7px;font-weight:650;font-size:.83rem;letter-spacing:.025em;color:#716e67;cursor:pointer;transition:background .18s,color .18s}
+    .mode-btn.active,.mode-btn.late-active{background:var(--indigo-deep);color:#fff;box-shadow:none}
+
+    .day-bar{display:flex;gap:7px;overflow-x:auto;padding:2px 1px 11px;margin-bottom:6px;scrollbar-width:none}
+    .day-bar::-webkit-scrollbar,.filter-row::-webkit-scrollbar{display:none}
+    .day-btn{white-space:nowrap;border:1px solid var(--line);background:rgba(255,254,250,.72);padding:7px 11px;border-radius:2px;color:#68665f;font-weight:650;font-size:.77rem;cursor:pointer;letter-spacing:.02em}
+    .day-btn.active{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+    .route-box{background:rgba(255,254,250,.82);border:1px solid var(--line);border-radius:3px;padding:14px;margin-bottom:20px;box-shadow:var(--shadow)}
+    .route-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+    .route-title{font-family:"Yu Mincho","Hiragino Mincho ProN","Noto Serif TC",serif;font-size:.98rem;font-weight:600;letter-spacing:.025em;color:var(--ink)}
+    .play-btn{border:1px solid var(--indigo);background:transparent;color:var(--indigo-deep);font-weight:650;border-radius:2px;padding:6px 10px;font-size:.72rem;cursor:pointer;white-space:nowrap}
+    .play-btn:hover{background:var(--indigo-deep);color:#fff}
+    .svg-wrap{height:400px;background:var(--sea);border:1px solid #d0dadd;border-radius:2px;overflow:hidden;position:relative}
+    .island{fill:var(--island);stroke:#aebbad;stroke-width:2.05}
+    .route-base{fill:none;stroke:#99978f;stroke-width:4.8;stroke-dasharray:7 9}
+    .route-active{fill:none;stroke:var(--vermillion);stroke-width:6.4;stroke-linecap:round}
+    .stop{fill:var(--paper-2);stroke:var(--vermillion);stroke-width:4.2}
+    .stop-label{font-size:13.5px;font-weight:700;fill:#393a37;paint-order:stroke;stroke:#f7f5ef;stroke-width:3.5px;stroke-linejoin:round}
+    .sea-label{font-size:11.5px;font-family:Georgia,"Times New Roman",serif;letter-spacing:.08em;font-weight:600;fill:#6d8188;opacity:.7}
+    #car{position:absolute;font-size:46px;transform:translate(-50%,-50%);z-index:3;filter:grayscale(.08) drop-shadow(0 3px 4px rgba(0,0,0,.22));will-change:left,top}
+
+    .controls{position:sticky;top:0;z-index:20;background:rgba(246,243,236,.93);backdrop-filter:blur(12px);padding:8px 0 11px;border-bottom:1px solid rgba(217,211,199,.65);margin-bottom:12px}
+    .search{width:100%;border:0;border-bottom:1px solid #aaa397;border-radius:0;padding:11px 2px;font-size:.86rem;background:transparent;outline:none;box-shadow:none;margin-bottom:10px;color:var(--ink)}
+    .search::placeholder{color:#9a968e}
+    .search:focus{border-color:var(--indigo-deep);box-shadow:none}
+    .filter-row{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none}
+    .filter-btn{white-space:nowrap;border:1px solid var(--line);background:rgba(255,254,250,.7);color:#6b6861;padding:6px 10px;border-radius:2px;font-size:.72rem;cursor:pointer}
+    .filter-btn.active{background:var(--moss);border-color:var(--moss);color:#fff;font-weight:650}
+
+    .summary-box{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);border:1px solid var(--line);margin-bottom:15px}
+    .mini-stat{background:rgba(255,254,250,.88);border:0;border-radius:0;padding:11px 8px;text-align:center}
+    .mini-stat b{display:block;font-family:Georgia,"Times New Roman",serif;font-size:1.18rem;font-weight:500;color:var(--indigo-deep);line-height:1.2}
+    .mini-stat span{font-size:.68rem;color:var(--muted);letter-spacing:.035em}
+
+    .card{background:rgba(255,254,250,.94);border-radius:3px;overflow:hidden;margin-bottom:19px;box-shadow:var(--shadow);border:1px solid var(--line);position:relative}
+    .card:before{content:"";position:absolute;left:0;top:0;width:3px;height:58px;background:var(--indigo);z-index:2}
+    .card.backup{background:#fffdf7}
+    .card.backup:before{background:var(--gold)}
+    .card.caution:before{background:var(--danger)}
+    .photo-wrap{height:205px;background:linear-gradient(145deg,#ece9e1,#dce3e2);position:relative;overflow:hidden}
+    .photo{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.86) contrast(.97)}
+    .photo-wrap:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 65%,rgba(31,31,28,.20));pointer-events:none}
+    .photo-fallback{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;color:#575a55;background:linear-gradient(145deg,#eeeae2,#dfe5e2)}
+    .photo-fallback .emoji{font-size:1.65rem;margin-bottom:8px;filter:grayscale(.7)}
+    .photo-fallback b{font-family:"Yu Mincho","Hiragino Mincho ProN",serif;font-weight:600}
+    .photo-fallback small{color:#86837c;max-width:420px;margin-top:5px}
+    .photo-badge{position:absolute;right:9px;bottom:9px;z-index:1;background:rgba(37,38,35,.74);color:#fff;border-radius:1px;padding:4px 7px;font-size:.62rem;letter-spacing:.04em;backdrop-filter:blur(4px)}
+    .credit{position:absolute;left:9px;bottom:9px;z-index:1;background:rgba(248,246,239,.86);color:#68645d;border-radius:1px;padding:3px 6px;font-size:.57rem;max-width:70%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-decoration:none}
+
+    .body{padding:16px 16px 17px}
+    .time-row{display:flex;justify-content:space-between;align-items:center;gap:8px;background:transparent;border-bottom:1px solid var(--line-soft);border-radius:0;padding:0 0 9px;margin-bottom:11px}
+    .day-pill{background:transparent;color:var(--indigo-deep);padding:0;border-radius:0;font-family:Georgia,"Times New Roman",serif;font-size:.78rem;font-weight:600;letter-spacing:.07em}
+    .time{font-family:Georgia,"Times New Roman",serif;font-weight:600;color:var(--vermillion);font-size:.93rem;letter-spacing:.04em}
+    .drive{display:flex;gap:7px;align-items:flex-start;background:#edf1f0;border:0;border-left:2px solid #8b9d9a;color:#536460;border-radius:0;padding:7px 9px;font-size:.76rem;font-weight:600;margin-bottom:11px}
+    .title{font-family:"Yu Mincho","Hiragino Mincho ProN","Noto Serif TC",serif;font-size:1.18rem;font-weight:600;letter-spacing:.025em;color:#272825;margin-bottom:6px;line-height:1.5}
+    .meta{font-size:.73rem;color:#817e76;margin-bottom:10px;line-height:1.7}
+    .desc{font-size:.86rem;color:#514f4a;line-height:1.75;margin-bottom:12px}
+    .badges{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:11px}
+    .badge{border-radius:1px;padding:3px 7px;font-size:.65rem;font-weight:650;border:1px solid var(--line);background:#f7f4ed;color:#6c6962}
+    .badge.ok{background:#edf1e9;color:#55614e;border-color:#cbd4c4}
+    .badge.warn{background:#f5efe4;color:#7b633e;border-color:#ded0b8}
+    .badge.danger{background:#f4eae7;color:#81534c;border-color:#d8beb7}
+    .badge.area{background:#edf0f2;color:#53606d;border-color:#cbd1d5}
+    .badge.tag{background:#faf8f2;color:#77736b;border-color:#e3ddd2}
+
+    .diet-box{background:#f4f1e8;border:0;border-left:2px solid var(--moss);border-radius:0;padding:10px 11px;margin-bottom:11px;color:#5a584f;font-size:.77rem}
+    .diet-box strong{color:#4c5547;font-weight:700}
+    .fact-box{background:#f8f6f0;border:1px solid var(--line-soft);border-radius:1px;padding:9px 10px;margin-bottom:11px;font-size:.74rem;color:#716d65}
+    .fact-box b{color:#4f4c46}
+
+    .ig-box{background:#f8f4ee;border:1px solid #ddd3c6;border-radius:2px;padding:10px 11px;margin:10px 0 12px}
+    .ig-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;font-size:.75rem;font-weight:700;color:#615a52}
+    .ig-note{font-size:.6rem;color:#999086;font-weight:500}
+    .ig-links{display:flex;gap:6px;flex-wrap:wrap}
+    .ig-link{display:inline-flex;align-items:center;gap:4px;text-decoration:none;background:#fffefa;color:#6a5d55;border:1px solid #d7ccc0;border-radius:1px;padding:6px 8px;font-size:.69rem;font-weight:650;line-height:1.2}
+    .ig-link:hover{border-color:var(--vermillion);color:var(--vermillion)}
+
+    .actions{display:grid;grid-template-columns:1.25fr .9fr .8fr;gap:6px;border-top:1px solid var(--line-soft);padding-top:12px}
+    .btn{display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;border-radius:2px;padding:9px 7px;font-size:.72rem;font-weight:650;border:1px solid var(--line);background:transparent;color:#595751;cursor:pointer;min-height:39px;letter-spacing:.01em}
+    .btn.map{background:var(--indigo-deep);color:#fff;border-color:var(--indigo-deep)}
+    .btn.photo-link{background:transparent;color:var(--moss);border-color:#aab4a4}
+    .btn.source{background:transparent;color:#6a665f}
+    .btn:hover{filter:brightness(.98)}
+    .btn:disabled{opacity:.45;cursor:not-allowed}
+
+    .empty{text-align:center;padding:42px 15px;color:#8a867e;background:rgba(255,254,250,.72);border:1px solid var(--line);border-radius:2px}
+    footer{padding:14px 7px 26px;color:#918c82;font-size:.67rem;text-align:left;line-height:1.75;border-top:1px solid var(--line);margin-top:24px}
+    footer a{color:#767169}
+
+    @media(max-width:520px){
+      body{padding:18px 12px 28px}
+      header{padding-top:9px}
+      h1{font-size:1.47rem}
+      .subtitle{font-size:.77rem;line-height:1.65}
+      .route-head{align-items:flex-start}
+      .route-title{font-size:.88rem;line-height:1.55}
+      .svg-wrap{height:350px}
+      #car{font-size:42px}
+      .photo-wrap{height:184px}
+      .body{padding:14px}
+      .actions{grid-template-columns:1fr 1fr}
+      .actions .btn.source{grid-column:1/-1}
+      .ig-head{align-items:flex-start;flex-direction:column;gap:2px}
+      .ig-link{font-size:.68rem}
+    }
+
+  </style>
+</head>
+<body>
+<header>
+  <h1>沖繩七日自駕旅程</h1>
+  <div class="subtitle">2026.10.24 — 10.30｜沖繩本島・自駕・蛋奶素旅行規劃</div>
+  <div class="updated">TRAVEL PLAN  ·  2026.08.19</div>
+</header>
+
+<div class="notice">
+  <strong>蛋奶素用餐提醒</strong>　日本料理的醬汁、麵類高湯、天婦羅沾汁與炒物可能含柴魚、魚介或豬油。點餐時建議主動確認高湯與調味來源。
+  <div class="jp-card"><span>JP</span><code>肉・魚・魚介・鰹だし・ラードなしでお願いします。卵と乳製品は大丈夫です。</code></div>
+</div>
+
+<div class="mode-switch">
+  <button class="mode-btn active" id="modeMain" onclick="switchMode('main')">標準行程</button>
+  <button class="mode-btn" id="modeLate" onclick="switchMode('late')">晚出發行程</button>
+</div>
+
+<div class="day-bar" id="dayBar"></div>
+
+<section class="route-box">
+  <div class="route-head">
+    <div class="route-title" id="routeTitle">📍 第 1 天動線</div>
+    <button class="play-btn" onclick="playCar()">播放路線</button>
+  </div>
+  <div class="svg-wrap" id="svgWrap">
+    <div id="car">🚗</div>
+    <svg id="routeSvg" width="100%" height="100%" viewBox="100 0 360 280" preserveAspectRatio="none" aria-label="沖繩行程示意地圖">
+      <text x="112" y="27" class="sea-label">東海 East China Sea</text>
+      <text x="360" y="260" class="sea-label">太平洋 Pacific Ocean</text>
+      <g>
+        <circle cx="345" cy="40" r="9" class="island"/>
+        <path d="M330 50Q345 55 335 68Q320 65 330 50Z" class="island"/>
+        <path class="island" d="M360 15C385 25 350 70 320 80C280 85 240 65 245 55C260 45 300 55 315 70C305 95 270 120 250 140C230 150 205 170 215 190C210 215 190 230 180 245C175 265 210 265 235 255C260 240 255 215 245 210C240 195 275 175 285 160C265 165 250 180 240 180C255 145 285 115 315 95C340 85 380 45 360 15Z"/>
+        <circle cx="168" cy="246" r="4" class="island"/><circle cx="218" cy="265" r="4" class="island"/>
+      </g>
+      <path id="basePath" class="route-base" d="M172 240L190 225"/>
+      <path id="activePath" class="route-active" d="M172 240L190 225"/>
+      <g id="stops"></g>
+    </svg>
+  </div>
+</section>
+
+<div class="controls">
+  <input id="search" class="search" type="search" placeholder="搜尋景點、餐廳、區域或 MapCode…" oninput="filterData()" />
+  <div class="filter-row" id="filterRow"></div>
+</div>
+
+<div class="summary-box">
+  <div class="mini-stat"><b id="countPlaces">0</b><span>行程地點</span></div>
+  <div class="mini-stat"><b id="countVeg">0</b><span>蛋奶素選項</span></div>
+  <div class="mini-stat"><b id="countPhoto">0</b><span>附照片地點</span></div>
+</div>
+
+<main id="container"></main>
+
+<footer>
+  MapCode 可能因設施入口或停車場位置不同而有差異，導航時請以 Google Maps 顯示的實際入口為準。<br>
+  景點營業時間、餐廳菜單與交通狀況可能變動，出發前建議再次確認官方資訊。
+</footer>
+
+<script>
+const commons = f => `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(f)}?width=1200`;
+const commonsPage = f => `https://commons.wikimedia.org/wiki/File:${encodeURIComponent(f)}`;
+const mapsUrl = q => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}`;
+const mapsNavUrl = q => `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(q)}&travelmode=driving`;
+function goGoogleMaps(q){
+  const url = mapsNavUrl(q);
+  // Open Google Maps directions in the current browsing context.
+  window.location.href = url;
+}
+
+
+const days = [
+  [1,'10/24 六'],[2,'10/25 日'],[3,'10/26 一'],[4,'10/27 二'],[5,'10/28 三'],[6,'10/29 四'],[7,'10/30 五']
+];
+const filters = ['全部','北部','中部','南部','那霸市區','蛋奶素選項','IG 參考','附照片'];
+
+const routePaths = {
+  1:{title:'📍 Day 1｜那霸機場 → 國際城鎮旅館 → 波上宮 → 牧志晚餐',d:'M172 240L190 225L183 222L191 224',stops:[['172','240','那霸機場','r'],['190','225','國際城鎮旅館','l'],['183','222','波上宮','l'],['191','224','牧志晚餐','r']]},
+  2:{title:'📍 Day 2｜港川 → 殘波岬 → 萬座毛 → 來客夢 → 美國村',d:'M190 225L205 200L215 170L230 150L225 190L210 185',stops:[['205','200','港川','r'],['215','170','殘波岬','l'],['230','150','萬座毛','r'],['225','190','來客夢','r'],['210','185','美國村','l']]},
+  3:{title:'📍 Day 3｜美麗海 → 花人逢 → 備瀨 → 古宇利 → 名護 DINO',d:'M190 225L250 55L270 72L246 50L345 40L305 75',stops:[['250','55','美麗海','l'],['270','72','花人逢','r'],['246','50','備瀨','l'],['345','40','古宇利','r'],['305','75','DINO','r']]},
+  4:{title:'📍 Day 4｜玉泉洞 → 知念岬 → 濱邊茶屋 → 奧武島 → 瀨長島',d:'M190 225L208 245L235 252L228 256L218 265L168 246',stops:[['208','245','玉泉洞','l'],['235','252','知念岬','r'],['228','256','濱邊茶屋','r'],['218','265','奧武島','l'],['168','246','瀨長島','r']]},
+  5:{title:'📍 Day 5｜首里城 → 金城町 → PARCO CITY → 國際通民謠',d:'M190 225L202 218L200 216L195 202L190 225',stops:[['202','218','首里城','r'],['195','202','PARCO','l'],['190','225','國際通','l']]},
+  6:{title:'📍 Day 6｜C&C → 那霸機場 → 壺屋通 → DFS',d:'M190 225L172 240L192 228L198 220',stops:[['190','225','C&C','r'],['172','240','那霸機場','r'],['192','228','壺屋通','l'],['198','220','DFS','r']]},
+  7:{title:'📍 Day 7｜那霸早餐 → 加油／還車 → 那霸機場',d:'M190 225L172 240',stops:[['190','225','那霸市區','l'],['172','240','還車／機場','r']]},
+  all:{title:'📍 7 天 6 夜｜沖繩本島自駕總覽（示意）',d:'M172 240L190 225L210 185L230 150L250 55L345 40L235 252L168 246',stops:[['172','240','那霸','r'],['210','185','北谷','l'],['250','55','本部','l'],['345','40','古宇利','r'],['235','252','南城','r']]}
+};
+
+const lateRouteOverrides = {
+  3:{title:'📍 Day 3 晚出發｜美麗海 → 花人逢 → 備瀨 → 古宇利',d:'M190 225L250 55L270 72L246 50L345 40',stops:[['250','55','美麗海','l'],['270','72','花人逢','r'],['246','50','備瀨','l'],['345','40','古宇利','r']]},
+  4:{title:'📍 Day 4 晚出發｜玉泉洞 → 知念岬 → 濱邊茶屋 → 瀨長島',d:'M190 225L208 245L235 252L228 256L168 246',stops:[['208','245','玉泉洞','l'],['235','252','知念岬','r'],['228','256','濱邊茶屋','r'],['168','246','瀨長島','r']]}
+};
+
+const data = [
+  {
+    day:1,date:'10/24',time:'16:00',lateTime:'16:00',late:true,area:'那霸市區',name:'國際城鎮旅館 Kokusai Towns Inn',query:'Kokusai Towns Inn Naha',address:'沖縄県那覇市松尾2-12-7',mapcode:'33157169*26',mapcodeVerified:true,
+    drive:'那霸機場／租車營業所 → 旅館：約 15～20 分鐘（視取車地點與市區車流）',
+    desc:'位於松尾、鄰近國際通與牧志商圈。館內停車位有限且採付費方式，自駕旅客建議提前向旅館預約車位。',
+    diet:'—',dietLevel:'neutral',status:'住宿',statusLevel:'ok',tags:['住宿','停車','第1天'],
+    photo:'https://www.otsinternational.jp/hotel/img/upload/hotel/main/20170207161241_452_l.jpg',photoCredit:'OTS Travel／Kokusai Towns Inn',photoSource:'https://www.otsinternational.jp/hotel/cnh/okinawa/naha/47KTI/',
+    source:'https://www.otsinternational.jp/hotel/cnh/okinawa/naha/47KTI/'
+  },
+  {
+    day:1,date:'10/24',time:'17:05',lateTime:'17:05',late:true,area:'那霸市區',name:'波上宮・波之上海灘',query:'Naminoue Shrine Okinawa',address:'沖縄県那覇市若狭1-25-11',mapcode:'33 185 022*00',mapcodeVerified:true,
+    drive:'國際城鎮旅館 → 波上宮：約 8～12 分鐘',desc:'那霸代表性的海岸神社，建於珊瑚礁斷崖之上。參拜後可步行至波之上海灘，傍晚適合安排海景與夕陽散步。',
+    diet:'—',dietLevel:'neutral',status:'景點',statusLevel:'ok',tags:['神社','夕陽','第1天'],
+    photo:commons('Naminoue-gū (53942689494).jpg'),photoCredit:'Photo: xiquinhosilva / CC BY 2.0',photoSource:commonsPage('Naminoue-gū (53942689494).jpg'),source:'https://www.okinawastory.jp/spot/600017530'
+  },
+  {
+    day:1,date:'10/24',time:'18:30',lateTime:'18:45',late:true,area:'那霸市區',name:'自然派食堂 タマテバコ（Tamatebako）',query:'自然派食堂 タマテバコ 那覇',address:'沖縄県那覇市牧志3-10-7',mapcode:'',mapcodeVerified:false,
+    drive:'波上宮 → 牧志：約 10～15 分鐘；建議先回飯店停車再步行',desc:'牧志一帶的 100% plant-based 餐廳，適合作為抵達沖繩後的第一餐。用餐後可步行前往國際通與屋台村。',
+    diet:'100% plant-based；仍建議告知過敏與不吃酒精調味等個別需求。',dietLevel:'safe',status:'純素餐廳',statusLevel:'ok',tags:['蛋奶素選項','純素','晚餐','第1天'],
+    photo:'',photoCredit:'',photoSource:'',source:'https://www.tamatebako-okinawa.com'
+  },
+  {
+    day:1,date:'10/24',time:'20:15',lateTime:'20:30',late:true,area:'那霸市區',name:'國際通屋台村・夜間散步',query:'Kokusai Dori Yataimura',address:'沖縄県那覇市牧志3-11-17',mapcode:'33 158 452*28',mapcodeVerified:true,
+    drive:'牧志晚餐 → 屋台村：步行約 3～8 分鐘',desc:'由多間小型居酒屋組成的夜間餐飲聚落，適合晚餐後散步、感受沖繩夜生活。若加點料理，建議逐項確認高湯與醬汁。',
+    diet:'一般居酒屋集合；高湯、醬汁、炸油都要確認。',dietLevel:'caution',status:'餐食需現場確認',statusLevel:'warn',tags:['夜生活','第1天'],photo:'',source:''
+  },
+
+  {day:2,date:'10/25',time:'09:30',lateTime:'11:00',late:true,area:'中部',name:'港川外人住宅街／Minatogawa Stateside Town',query:'Minatogawa Stateside Town',address:'沖縄県浦添市港川2丁目一帶',mapcode:'33 341 124*67',mapcodeVerified:true,drive:'那霸 → 港川：約 25～35 分鐘',desc:'由舊美軍眷舍改造而成的街區，集合咖啡、甜點、選物與生活風格店家。建議安排約 60～90 分鐘散步拍照。',diet:'咖啡／甜點店可較容易找蛋奶素，但請確認明膠、豬油。',dietLevel:'caution',status:'街區',statusLevel:'ok',tags:['拍照','咖啡','第2天'],photo:'',source:''},
+  {day:2,date:'10/25',time:'11:30',lateTime:'12:15',late:true,area:'中部',name:'殘波岬燈塔・斷崖散策',query:'Cape Zanpa Lighthouse',address:'沖縄県中頭郡読谷村宇座',mapcode:'',mapcodeVerified:false,drive:'港川 → 殘波岬：約 35～45 分鐘',desc:'沖繩本島中部代表性的海崖景觀，可沿海岸步道散步並登燈塔眺望東海。建議預留 60～90 分鐘。',diet:'—',dietLevel:'neutral',status:'景點',statusLevel:'ok',tags:['海景','燈塔','第2天'],photo:commons('Cape Zampa Lighthouse and rocks on Cape Zampa 2.JPG'),photoCredit:'Photo: Soramimi / CC BY-SA 4.0',photoSource:commonsPage('Cape Zampa Lighthouse and rocks on Cape Zampa 2.JPG'),source:'https://www.tokokai.org/tourlight/tourlight10/'},
+  {day:2,date:'10/25',time:'13:15',lateTime:'14:00',late:true,area:'中部',name:'萬座毛・象鼻海蝕崖',query:'Manzamo Okinawa',address:'沖縄県国頭郡恩納村恩納2767',mapcode:'',mapcodeVerified:false,drive:'殘波岬 → 萬座毛：約 30～40 分鐘',desc:'以象鼻岩與隆起珊瑚礁海崖聞名，步道距離不長，建議安排約 45～70 分鐘。強風或雨天請留意斷崖步道安全。',diet:'—',dietLevel:'neutral',status:'景點',statusLevel:'ok',tags:['海景','第2天'],photo:commons('Onna Okinawa Japan Cape-Manzamo-01.jpg'),photoCredit:'Photo: CEphoto, Uwe Aranas / CC BY-SA',photoSource:commonsPage('Onna Okinawa Japan Cape-Manzamo-01.jpg'),source:'https://www.manzamo.jp/'},
+  {day:2,date:'10/25',time:'15:30',lateTime:'16:15',late:true,area:'中部',name:'AEON MALL Okinawa Rycom',query:'AEON MALL Okinawa Rycom',address:'沖縄県中頭郡北中城村ライカム1',mapcode:'',mapcodeVerified:false,drive:'萬座毛 → Rycom：約 35～45 分鐘',desc:'大型購物中心，可安排購物、休息與下午茶，也是雨天備案。館內餐飲選擇多，蛋奶素用餐仍建議確認湯底與醬汁。',diet:'美食街選擇多；蛋奶素請逐店確認高湯／醬汁。',dietLevel:'caution',status:'商場資訊請出發前再確認',statusLevel:'warn',tags:['購物','室內','第2天'],photo:'',source:'https://okinawarycom-aeonmall.com/'},
+  {day:2,date:'10/25',time:'18:15',lateTime:'18:45',late:true,area:'中部',name:'美國村・Taco Rice Café Kijimuna',query:'Taco Rice Cafe Kijimuna American Village',address:'沖縄県中頭郡北谷町美浜9-1 デポアイランドC棟2F',mapcode:'',mapcodeVerified:false,drive:'Rycom → 美國村：約 15～20 分鐘',desc:'傍晚先逛美國村與海濱步道，再於 Depot Island 用餐。Kijimuna 可詢問 chili beans／無肉版本，點餐時請明確指定 meat-free。',diet:'有無肉 chili-beans 選項；不是全素餐廳。',dietLevel:'medium',status:'餐飲',statusLevel:'ok',tags:['蛋奶素選項','夕陽','晚餐','第2天'],photo:'',source:'https://www.depot-island.co.jp/en/shop/omutaco/'},
+
+  {day:3,date:'10/26',time:'09:30',lateTime:'10:30',late:true,area:'北部',name:'沖繩美麗海水族館・黑潮之海',query:'Okinawa Churaumi Aquarium',address:'沖縄県国頭郡本部町石川424',mapcode:'',mapcodeVerified:false,drive:'那霸 → 美麗海：高速道路約 1 小時 25 分～1 小時 50 分',desc:'北部重點行程，建議預留 2.5～3.5 小時參觀黑潮之海、水族展示與海洋博公園。停車可優先選擇鄰近水族館的停車區。',diet:'館內餐飲不是素食專門；建議把正餐留到下一站。',dietLevel:'caution',status:'景點',statusLevel:'ok',tags:['經典','水族館','第3天'],photo:commons('Whale Shark - Churaumi aquarium, Okinawa, Japan.jpg'),photoCredit:'Photo: pelican / CC BY-SA 2.0',photoSource:commonsPage('Whale Shark - Churaumi aquarium, Okinawa, Japan.jpg'),source:'https://churaumi.okinawa/en/'},
+  {day:3,date:'10/26',time:'13:15',lateTime:'13:30',late:true,area:'北部',name:'Pizza Cafe 花人逢（Kajinhou／Pizza in the Sky）',query:'Pizza Cafe Kajinhou Motobu',address:'沖縄県国頭郡本部町山里1153-2',mapcode:'',mapcodeVerified:false,drive:'美麗海 → 花人逢：約 15～25 分鐘',desc:'位於本部町山坡上的人氣景觀披薩店，可眺望本部半島與海景。建議事先預留候位時間，並於點餐時詢問無肉配料選擇。',diet:'可詢問不加肉類配料的披薩；起司含乳。請確認醬料與交叉接觸需求。',dietLevel:'medium',status:'餐飲',statusLevel:'ok',tags:['蛋奶素選項','景觀餐廳','午餐','第3天'],photo:'https://kajinhou.com/english/img/top_img02.png',photoCredit:'Pizza Cafe 花人逢',photoSource:'https://kajinhou.com/english/',source:'https://kajinhou.com/english/'},
+  {day:3,date:'10/26',time:'14:40',lateTime:'15:00',late:true,area:'北部',name:'備瀨福木林道',query:'Bise Fukugi Tree Road',address:'沖縄県国頭郡本部町備瀬',mapcode:'',mapcodeVerified:false,drive:'花人逢 → 備瀨：約 15～20 分鐘',desc:'百年福木形成綠色巷道，適合步行或租單車穿梭聚落。建議以核心巷道與海邊為主，停留約 60～90 分鐘。',diet:'—',dietLevel:'neutral',status:'景點',statusLevel:'ok',tags:['散步','拍照','第3天'],photo:'',source:''},
+  {day:3,date:'10/26',time:'16:00',lateTime:'16:30',late:true,area:'北部',name:'古宇利大橋・古宇利島',query:'Kouri Bridge Okinawa',address:'沖縄県国頭郡今帰仁村古宇利',mapcode:'',mapcodeVerified:false,drive:'備瀨 → 古宇利大橋：約 25～35 分鐘',desc:'行程以跨海大橋、古宇利海灘與島南端景觀為主。若加訪 Heart Rock，需另外預留停車與步行時間。',diet:'—',dietLevel:'neutral',status:'景點',statusLevel:'ok',tags:['海景','自駕','第3天'],photo:commons('Nago Okinawa Kouri-Bridge-01.jpg'),photoCredit:'Photo: CEphoto, Uwe Aranas / CC BY-SA 3.0',photoSource:commonsPage('Nago Okinawa Kouri-Bridge-01.jpg'),source:''},
+  {day:3,date:'10/26',time:'17:00',lateTime:'—',late:false,area:'北部',name:'DINO Dinosaur PARK Yanbaru Subtropical Forest',query:'DINO Dinosaur PARK Yanbaru Subtropical Forest',address:'沖縄県名護市中山1024-1',mapcode:'',mapcodeVerified:false,drive:'古宇利 → DINO Park：約 25～35 分鐘',desc:'亞熱帶森林步道結合大型恐龍造景，適合親子與拍照。建議 17:00 前抵達並留意最後入場時間；若北部前段停留較久，可彈性取消。',diet:'—',dietLevel:'neutral',status:'17:30 最後入場',statusLevel:'ok',tags:['親子','第3天'],photo:'',source:'https://www.okashigoten.co.jp/en/subtropical/'},
+
+  {day:4,date:'10/27',time:'09:30',lateTime:'10:30',late:true,area:'南部',name:'沖繩世界・玉泉洞',query:'Okinawa World Gyokusendo',address:'沖縄県南城市玉城前川1336',mapcode:'232 495 330*28',mapcodeVerified:true,drive:'那霸 → 沖繩世界：約 25～35 分鐘',desc:'以玉泉洞、琉球文化體驗與傳統工藝為主。洞內潮濕且階梯較多，建議穿防滑好走的鞋，停留約 2～2.5 小時。',diet:'園區餐飲請確認魚介高湯。',dietLevel:'caution',status:'景點',statusLevel:'ok',tags:['鐘乳洞','文化','第4天'],photo:commons('Gyokusendo Cave - panoramio.jpg'),photoCredit:'Photo: FoxyStranger Kawasaki / CC BY-SA 3.0',photoSource:commonsPage('Gyokusendo Cave - panoramio.jpg'),source:'https://www.gyokusendo.co.jp/okinawaworld/'},
+  {day:4,date:'10/27',time:'12:15',lateTime:'13:00',late:true,area:'南部',name:'知念岬公園',query:'Chinen Cape Park',address:'沖縄県南城市知念久手堅',mapcode:'232 594 503*30',mapcodeVerified:true,drive:'沖繩世界 → 知念岬：約 20～25 分鐘',desc:'視野開闊的海岬公園，可眺望太平洋與久高島方向。建議停留約 30～45 分鐘；雨天可縮短停留。',diet:'—',dietLevel:'neutral',status:'景點',statusLevel:'ok',tags:['海景','第4天'],photo:commons('Okinawa Nanjo Cape Chinen park hdsr VLux5 16.jpg'),photoCredit:'Photo: Hyppolyte de Saint-Rambert / CC BY 4.0',photoSource:commonsPage('Okinawa Nanjo Cape Chinen park hdsr VLux5 16.jpg'),source:''},
+  {day:4,date:'10/27',time:'13:20',lateTime:'14:00',late:true,area:'南部',name:'浜辺の茶屋／濱邊茶屋',query:'Hamabe no Chaya Okinawa',address:'沖縄県南城市玉城玉城2-1',mapcode:'',mapcodeVerified:false,drive:'知念岬 → 濱邊茶屋：約 10～15 分鐘',desc:'南城海岸的人氣景觀咖啡店，以面海木窗座位最具特色。可安排輕食、甜點與咖啡，熱門時段建議預留候位時間。',diet:'可挑蔬菜類輕食／甜點；請確認麵包、醬汁、湯底是否含魚介。',dietLevel:'medium',status:'餐飲',statusLevel:'ok',tags:['蛋奶素選項','海景咖啡','第4天'],photo:'https://sachibaru.jp/wp/wp-content/uploads/2025/09/hamabe25_2-810x540.webp',photoCredit:'浜辺の茶屋',photoSource:'https://sachibaru.jp/hamacha/',source:'https://sachibaru.jp/hamacha/'},
+  {day:4,date:'10/27',time:'15:00',lateTime:'—',late:false,area:'南部',name:'奧武島・天婦羅／海邊散步',query:'Oujima Island Okinawa',address:'沖縄県南城市玉城奥武',mapcode:'',mapcodeVerified:false,drive:'濱邊茶屋 → 奧武島：約 10～15 分鐘',desc:'可短暫停留海邊散步並品嘗當地天婦羅。蛋奶素建議選蔬菜類，並確認炸油、麵衣與沾汁是否含魚介高湯。',diet:'蔬菜天婦羅請確認高湯、炸油與麵衣成分；建議以鹽取代含魚介高湯的沾汁。',dietLevel:'caution',status:'餐食需現場確認',statusLevel:'warn',tags:['小吃','第4天'],photo:'',source:''},
+  {day:4,date:'10/27',time:'16:45',lateTime:'16:45',late:true,area:'南部',name:'瀨長島 Umikaji Terrace・幸せのパンケーキ',query:'A Happy Pancake Okinawa Umikaji Terrace',address:'沖縄県豊見城市瀬長174-6 ウミカジテラス32',mapcode:'33 002 602*06',mapcodeVerified:true,drive:'奧武島／南城 → 瀨長島：約 25～40 分鐘',desc:'地中海風格的海景商場，可同時欣賞夕陽與那霸機場飛機起降。建議 16:45 左右抵達，先用甜點再散步看夕陽。',diet:'甜味鬆餅通常含蛋奶；若有嚴格添加物限制仍需詢問。',dietLevel:'medium',status:'餐飲',statusLevel:'ok',tags:['蛋奶素選項','甜點','夕陽','第4天'],photo:'',source:'https://magia.tokyo/'},
+
+  {day:5,date:'10/28',time:'09:30',lateTime:'10:30',late:true,area:'那霸市區',name:'首里城公園・金城町石疊道',query:'Shurijo Castle Park Okinawa',address:'沖縄県那覇市首里金城町1-2',mapcode:'33 161 526*71',mapcodeVerified:true,drive:'飯店 → 首里城：約 15～25 分鐘',desc:'2026/10/28 可參觀首里城公園、城門、展區與金城町石疊道；正殿一般公開預定自 2026/11/23 起，因此本日以公園與周邊歷史街區為主。',diet:'—',dietLevel:'neutral',status:'正殿開放時程',statusLevel:'warn',tags:['文化','世界遺產周邊','第5天'],photo:'',source:'https://oki-park.jp/shurijo/'},
+  {day:5,date:'10/28',time:'12:30',lateTime:'13:00',late:true,area:'中部',name:'SAN-A 浦添西海岸 PARCO CITY',query:'SAN-A Urasoe West Coast PARCO CITY',address:'沖縄県浦添市西洲3-1-1',mapcode:'',mapcodeVerified:false,drive:'首里城 → PARCO CITY：約 20～30 分鐘',desc:'大型海景購物中心，適合安排午餐、購物與雨天備案。館內美食街選擇豐富，蛋奶素餐點請逐店確認湯底與醬汁。',diet:'美食街請逐店確認；烏龍麵湯通常不是素食高湯。',dietLevel:'caution',status:'菜單需當日確認',statusLevel:'warn',tags:['購物','室內','第5天'],photo:'',source:'https://www.parcocity.jp/'},
+  {day:5,date:'10/28',time:'18:30',lateTime:'18:30',late:true,area:'那霸市區',name:'島唄と地料理 とぅばらーま／民謠晚餐備選',query:'島唄と地料理 とぅばらーま 国際通り',address:'沖縄県那覇市牧志2丁目附近（請以地圖搜尋結果為準）',mapcode:'',mapcodeVerified:false,drive:'PARCO → 飯店：約 20～30 分鐘；停車後步行',desc:'以三線、島唄現場演出與沖繩料理為主的晚餐體驗。一般居酒屋常使用豬肉與柴魚高湯，若飲食限制較嚴格，可先於純素餐廳用餐，再安排表演行程。',diet:'一般沖繩料理店：需逐道確認肉、魚、柴魚高湯與豬油。',dietLevel:'caution',status:'體驗可行；素食不保證',statusLevel:'warn',tags:['民謠','晚餐','第5天'],photo:'',source:''},
+
+  {day:6,date:'10/29',time:'10:30',lateTime:'10:30',late:true,area:'那霸市區',name:'C&C BREAKFAST OKINAWA',query:'C&C BREAKFAST OKINAWA',address:'沖縄県那覇市松尾2-9-6 タカミネビル1F',mapcode:'',mapcodeVerified:false,drive:'飯店 → C&C：步行約 5～10 分鐘',desc:'牧志市場附近的人氣早餐店，10:30 適合安排早午餐。水果、Acai 與鬆餅較容易選擇，鹹食與三明治請確認肉類配料與醬汁。',diet:'水果、Acai、鬆餅較易選；若要三明治／鹹食需確認培根、醬汁等。',dietLevel:'medium',status:'餐飲',statusLevel:'ok',tags:['蛋奶素選項','早午餐','第6天'],photo:'https://www.ccbokinawa.com/img/access_inner.jpg',photoCredit:'C&C BREAKFAST OKINAWA',photoSource:'https://www.ccbokinawa.com/',source:'https://www.ccbokinawa.com/'},
+  {day:6,date:'10/29',time:'13:00',lateTime:'13:00',late:true,area:'那霸市區',name:'送 2 位夥伴至那霸機場',query:'Naha Airport International Terminal',address:'沖縄県那覇市鏡水150',mapcode:'',mapcodeVerified:false,drive:'那霸市區 → 那霸機場：約 15～25 分鐘',desc:'15:40 國際線班機建議以 13:00 抵達機場為目標，預留報到、行李托運、安檢與出境時間。',diet:'—',dietLevel:'neutral',status:'交通節點',statusLevel:'ok',tags:['交通','第6天'],photo:'',source:'https://www.naha-airport.co.jp/'},
+  {day:6,date:'10/29',time:'14:30',lateTime:'15:00',late:true,area:'那霸市區',name:'壺屋やちむん通り／壺屋通陶瓷街',query:'Tsuboya Yachimun Street',address:'沖縄県那覇市壺屋1丁目',mapcode:'33 158 093*74',mapcodeVerified:true,drive:'那霸機場 → 壺屋：約 15～25 分鐘',desc:'送機後返回那霸市區，沿壺屋通挑選陶器、風獅爺與手作雜貨。老街巷道較窄，建議使用周邊付費停車場後步行。',diet:'—',dietLevel:'neutral',status:'景點',statusLevel:'ok',tags:['文青','散步','第6天'],photo:'',source:''},
+  {day:6,date:'10/29',time:'16:30',lateTime:'17:00',late:true,area:'那霸市區',name:'T Galleria Okinawa by DFS・新都心',query:'T Galleria Okinawa by DFS',address:'沖縄県那覇市おもろまち4-1',mapcode:'',mapcodeVerified:false,drive:'壺屋 → 新都心：約 10～15 分鐘',desc:'那霸新都心的免稅購物據點，可與 San-A Main Place 一併安排。免稅資格、營業時間與提貨方式請以當日官方資訊為準。',diet:'—',dietLevel:'neutral',status:'購物站；規則需當日確認',statusLevel:'warn',tags:['購物','第6天'],photo:'',source:'https://www.dfs.com/en/okinawa'},
+
+  {day:7,date:'10/30',time:'09:00',lateTime:'10:00',late:true,area:'那霸市區',name:'樂園CAFÉ（Rakuen Café）・返程早餐',query:'樂園CAFÉ Naha Ryubo',address:'沖縄県那覇市久茂地1-1-1 デパートリウボウ2F',mapcode:'',mapcodeVerified:false,drive:'飯店 → 樂園CAFÉ：約 5～10 分鐘（依住宿位置可步行）',desc:'位於百貨 Ryubo 內，提供 vegan-friendly 餐點，適合作為返程日早餐或早午餐。用餐後可返回旅館取行李並前往租車營業所。',diet:'有明確 vegan-friendly 菜色；仍可告知「蛋奶可以、肉魚柴魚高湯不要」。',dietLevel:'safe',status:'餐飲',statusLevel:'ok',tags:['蛋奶素選項','早餐','第7天'],photo:'',source:'https://www.resort-dept.okinawa/cafe/'},
+  {day:7,date:'10/30',time:'11:00',lateTime:'11:30',late:true,area:'那霸市區',name:'加油・租車還車・那霸機場',query:'Naha Airport',address:'沖縄県那覇市鏡水150',mapcode:'',mapcodeVerified:false,drive:'市區 → 租車營業所／機場：約 15～30 分鐘＋還車手續',desc:'依租車公司規定於指定範圍內加滿油並保留收據。還車時間應依航班起飛時間、接駁與報到需求預留充足緩衝。',diet:'—',dietLevel:'neutral',status:'時間依航班調整',statusLevel:'warn',tags:['交通','還車','第7天'],photo:'',source:'https://www.naha-airport.co.jp/'}
+
+];
+
+// Instagram 行程與餐飲參考連結。
+const restaurantIgQueries = new Set([
+  '自然派食堂 タマテバコ 那覇',
+  'Taco Rice Cafe Kijimuna American Village',
+  'Pizza Cafe Kajinhou Motobu',
+  'Hamabe no Chaya Okinawa',
+  'A Happy Pancake Okinawa Umikaji Terrace',
+  '島唄と地料理 とぅばらーま 国際通り',
+  'C&C BREAKFAST OKINAWA',
+  '樂園CAFÉ Naha Ryubo'
+]);
+
+const igGuides = {
+  'Naminoue Shrine Okinawa': [
+    {label:'波上宮半日散策',url:'https://www.instagram.com/p/DMK2bv_BW5J/'}
+  ],
+  'Minatogawa Stateside Town': [
+    {label:'港川外人住宅散策',url:'https://www.instagram.com/reel/DWx_9uakzfg/'},
+    {label:'港川＋沖繩景點懶人包',url:'https://www.instagram.com/reel/DNkzcZUR8hK/'}
+  ],
+  'Cape Zanpa Lighthouse': [
+    {label:'殘波岬 360° 海景',url:'https://www.instagram.com/reel/DT7tg2ZEk2c/'},
+    {label:'殘波岬登塔分享',url:'https://www.instagram.com/reel/C71SFbwvKaO/'}
+  ],
+  'Manzamo Okinawa': [
+    {label:'萬座毛海岸絕景',url:'https://www.instagram.com/reel/DU5ZY7PAONh/'}
+  ],
+  'Okinawa Churaumi Aquarium': [
+    {label:'美麗海鯨鯊影音',url:'https://www.instagram.com/reel/DbHpHFNvftW/'},
+    {label:'水族館完整體驗',url:'https://www.instagram.com/reel/Db-sj9YJkNk/'}
+  ],
+  'Bise Fukugi Tree Road': [
+    {label:'備瀨福木騎車散策',url:'https://www.instagram.com/reel/DVlIEZImEYV/'},
+    {label:'福木綠色隧道',url:'https://www.instagram.com/reel/Da919VQxBQU/'}
+  ],
+  'Kouri Bridge Okinawa': [
+    {label:'古宇利大橋北部玩法',url:'https://www.instagram.com/reel/C6dvcOcPwX1/'}
+  ],
+  'DINO Dinosaur PARK Yanbaru Subtropical Forest': [
+    {label:'DINO 恐龍公園分享',url:'https://www.instagram.com/reel/DW2eYY5SSAj/'}
+  ],
+  'Okinawa World Gyokusendo': [
+    {label:'玉泉洞地下秘境',url:'https://www.instagram.com/reel/Dbe9VQBhQDT/'},
+    {label:'玉泉洞鐘乳石介紹',url:'https://www.instagram.com/reel/DbQZabwzhy7/'}
+  ],
+  'Chinen Cape Park': [
+    {label:'知念岬＋南部景點',url:'https://www.instagram.com/reel/DTZWK2BEjKl/'}
+  ],
+  'Oujima Island Okinawa': [
+    {label:'奧武島＋南部景點',url:'https://www.instagram.com/reel/DTZWK2BEjKl/'}
+  ],
+  'Shurijo Castle Park Okinawa': [
+    {label:'首里城現況介紹',url:'https://www.instagram.com/reel/DRuKqp_D-Kb/'},
+    {label:'2026 首里城秋季資訊',url:'https://www.instagram.com/reel/DZfXszguHkO/'}
+  ],
+
+  // 餐廳與咖啡 Instagram 參考。
+  '自然派食堂 タマテバコ 那覇': [
+    {label:'沖繩素食餐飲分享',url:'https://www.instagram.com/reel/DWQ3Z9hkWJt/'},
+    {label:'Vegan 餐點影音',url:'https://www.instagram.com/reel/DQGHzhWkhBu/'}
+  ],
+  'Taco Rice Cafe Kijimuna American Village': [
+    {label:'美國村＋Kijimuna 用餐',url:'https://www.instagram.com/reel/DVtC0DCkzsd/'},
+    {label:'沖繩塔可飯美食介紹',url:'https://www.instagram.com/reel/DFPEO2aPRho/'}
+  ],
+  'Pizza Cafe Kajinhou Motobu': [
+    {label:'花人逢披薩＋海景',url:'https://www.instagram.com/reel/C5FtnrevyzC/'},
+    {label:'花人逢用餐分享',url:'https://www.instagram.com/reel/DWc8_KyAV8W/'}
+  ],
+  'Hamabe no Chaya Okinawa': [
+    {label:'浜辺の茶屋海景咖啡',url:'https://www.instagram.com/reel/C8Hrk4UvSdW/'},
+    {label:'浜辺の茶屋用餐景觀',url:'https://www.instagram.com/reel/DYReUcmSY6d/'}
+  ],
+  'A Happy Pancake Okinawa Umikaji Terrace': [
+    {label:'瀨長島幸福鬆餅',url:'https://www.instagram.com/reel/C7Ef0bGP1d4/'},
+    {label:'官方海景鬆餅介紹',url:'https://www.instagram.com/reel/Cem-GlPJNMS/'}
+  ],
+  '島唄と地料理 とぅばらーま 国際通り': [
+    {label:'島唄現場演出參考',url:'https://www.instagram.com/reel/Db9_CWtycdr/'},
+    {label:'三線ライブ店內氣氛',url:'https://www.instagram.com/reel/DcIEOsRSWaw/'}
+  ],
+  'C&C BREAKFAST OKINAWA': [
+    {label:'C&C 早餐影音介紹',url:'https://www.instagram.com/reel/DBN_BdXRwuE/'},
+    {label:'C&C 早餐分享',url:'https://www.instagram.com/p/DRRC8Cwkpdi/'}
+  ],
+  '樂園CAFÉ Naha Ryubo': [
+    {label:'樂園CAFÉ 用餐分享',url:'https://www.instagram.com/reel/DbKfZ-EB35R/'},
+    {label:'Vegan 菜單影音介紹',url:'https://www.instagram.com/reel/DU-mY5ck8_8/'}
+  ]
+};
+
+function igHtml(item){
+  const links=igGuides[item.query]||[];
+  if(!links.length)return '';
+  const isRestaurant=restaurantIgQueries.has(item.query);
+  const title=isRestaurant?'IG 餐飲參考':'IG 行程參考';
+  const note='Instagram 公開內容・可能需登入';
+  return `<div class="ig-box"><div class="ig-head"><span>${title}</span><span class="ig-note">${note}</span></div><div class="ig-links">${links.map((x,i)=>`<a class="ig-link" href="${x.url}" rel="noopener">${escapeHtml(x.label)}</a>`).join('')}</div></div>`;
+}
+
+let selectedDay=1, currentMode='main', subFilter='全部';
+const container=document.getElementById('container');
+
+function renderDayBar(){
+  const bar=document.getElementById('dayBar');
+  bar.innerHTML=days.map(([d,label])=>`<button class="day-btn ${selectedDay===d?'active':''}" onclick="selectDay(${d},this)">D${d} ${label}</button>`).join('')+
+    `<button class="day-btn ${selectedDay==='all'?'active':''}" onclick="selectDay('all',this)">全部</button>`;
+}
+function renderFilters(){
+  document.getElementById('filterRow').innerHTML=filters.map(f=>`<button class="filter-btn ${subFilter===f?'active':''}" onclick="setFilter('${f}',this)">${f}</button>`).join('');
+}
+function switchMode(mode){
+  currentMode=mode;
+  document.getElementById('modeMain').className='mode-btn '+(mode==='main'?'active':'');
+  document.getElementById('modeLate').className='mode-btn '+(mode==='late'?'late-active':'');
+  renderRoute(); playCar(); filterData();
+}
+function selectDay(day,btn){
+  selectedDay=day;
+  document.querySelectorAll('.day-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderRoute(); playCar(); filterData();
+}
+function setFilter(f,btn){
+  subFilter=f;document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');filterData();
+}
+function renderRoute(){
+  const r=(currentMode==='late' && lateRouteOverrides[selectedDay]) ? lateRouteOverrides[selectedDay] : (routePaths[selectedDay]||routePaths.all);
+  document.getElementById('routeTitle').textContent=r.title;
+  document.getElementById('basePath').setAttribute('d',r.d);
+  const active=document.getElementById('activePath');active.setAttribute('d',r.d);active.style.strokeDasharray='0';active.style.strokeDashoffset='0';
+  const g=document.getElementById('stops');g.innerHTML='';
+  r.stops.forEach(([x,y,n,a])=>{
+    const c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('cx',x);c.setAttribute('cy',y);c.setAttribute('r','7');c.setAttribute('class','stop');g.appendChild(c);
+    const t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',a==='r'?Number(x)+8:Number(x)-8);t.setAttribute('y',Number(y)+4);t.setAttribute('text-anchor',a==='r'?'start':'end');t.setAttribute('class','stop-label');t.textContent=n;g.appendChild(t);
+  });
+}
+function playCar(){
+  const path=document.getElementById('basePath');
+  const active=document.getElementById('activePath');
+  const car=document.getElementById('car');
+  const wrap=document.getElementById('svgWrap');
+  const svg=document.getElementById('routeSvg');
+  const len=path.getTotalLength();
+
+  active.style.transition='none';
+  active.style.strokeDasharray=len;
+  active.style.strokeDashoffset=len;
+  requestAnimationFrame(()=>{
+    active.style.transition='stroke-dashoffset 2.5s ease';
+    active.style.strokeDashoffset='0';
+  });
+
+  let start=null;
+  const duration=2500;
+  function frame(ts){
+    if(!start) start=ts;
+    const progress=Math.min((ts-start)/duration,1);
+    const point=path.getPointAtLength(progress*len);
+    const matrix=svg.getScreenCTM();
+    const wrapRect=wrap.getBoundingClientRect();
+
+    if(matrix){
+      const svgPoint=svg.createSVGPoint();
+      svgPoint.x=point.x;
+      svgPoint.y=point.y;
+      const screenPoint=svgPoint.matrixTransform(matrix);
+      car.style.left=`${screenPoint.x-wrapRect.left}px`;
+      car.style.top=`${screenPoint.y-wrapRect.top}px`;
+    }
+
+    if(progress<1) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+function badgeStatus(item){ return ''; }
+function dietBadge(item){
+  if(item.dietLevel==='safe')return '<span class="badge ok">純素／蛋奶素友善</span>';
+  if(item.dietLevel==='medium')return '<span class="badge warn">可調整為蛋奶素</span>';
+  if(item.dietLevel==='caution')return '<span class="badge danger">需確認高湯／醬汁</span>';
+  return '';
+}
+function photoHtml(item){
+  if(item.photo){
+    return `<div class="photo-wrap"><img class="photo" src="${item.photo}" alt="${escapeHtml(item.name)}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+      <div class="photo-fallback" style="display:none"><div class="emoji">•</div><b>${escapeHtml(item.name)}</b><small>圖片暫時無法載入，可使用下方「地圖照片」查看。</small></div>
+      <span class="photo-badge">PHOTO</span>${item.photoCredit?`<a class="credit" href="${item.photoSource||'#'}" target="_blank" rel="noopener">${escapeHtml(item.photoCredit)}</a>`:''}</div>`;
+  }
+  return `<div class="photo-wrap"><div class="photo-fallback"><div class="emoji">•</div><b>${escapeHtml(item.name)}</b><small>可使用下方「地圖照片」查看景點或店家最新影像。</small></div><span class="photo-badge">PLACE</span></div>`;
+}
+function escapeHtml(s=''){return String(s).replace(/[&<>'"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[m]));}
+function cardHtml(item){
+  const displayTime=currentMode==='late'?(item.lateTime||item.time):item.time;
+  const mapcode=item.mapcode?escapeHtml(item.mapcode):'—';
+  const tags=item.tags.map(t=>`<span class="badge tag">#${escapeHtml(t)}</span>`).join('');
+  const sourceBtn=item.source?`<a class="btn source" href="${item.source}" target="_blank" rel="noopener">官方／網站資訊</a>`:`<a class="btn source" href="${mapsUrl(item.query)}" target="_blank" rel="noopener">地點資訊</a>`;
+  const copyLabel=item.mapcode?'複製 MapCode':'複製地址';
+  const copyValue=item.mapcode||item.address;
+  return `<article class="card ${item.statusLevel==='warn'?'caution':''}">
+    ${photoHtml(item)}
+    <div class="body">
+      <div class="time-row"><span class="day-pill">D${item.day}・${item.date}</span><span class="time">⏰ ${escapeHtml(displayTime)}</span></div>
+      <div class="drive"><span>DRIVE</span><span>${escapeHtml(item.drive)}</span></div>
+      <div class="title">${escapeHtml(item.name)}</div>
+      <div class="meta">${escapeHtml(item.area)} ｜ ${escapeHtml(item.address)}<br>MapCode：<b>${mapcode}</b></div>
+      <div class="desc">${escapeHtml(item.desc)}</div>
+      <div class="badges"><span class="badge area">${escapeHtml(item.area)}</span>${dietBadge(item)}${tags}</div>
+      ${item.diet&&item.diet!=='—'?`<div class="diet-box"><strong>蛋奶素建議　</strong>${escapeHtml(item.diet)}</div>`:''}
+      ${item.mapcode?`<div class="fact-box"><b>導航：</b>Google Maps 建議直接導航至店名或設施入口；車機可使用 MapCode，停車場入口可能另有位置設定。</div>`:''}
+      ${igHtml(item)}
+      <div class="actions">
+        <a class="btn map" href="${mapsNavUrl(item.query)}" onclick="goGoogleMaps(${JSON.stringify(item.query)}); return false;">Google 導航</a>
+        <a class="btn photo-link" href="${mapsUrl(item.query)}">地圖照片</a>
+        <button class="btn" onclick='copyText(${JSON.stringify(copyValue)})'>${copyLabel}</button>
+        ${sourceBtn}
+      </div>
+    </div>
+  </article>`;
+}
+function filterData(){
+  const k=document.getElementById('search').value.trim().toLowerCase();
+  const arr=data.filter(item=>{
+    if(currentMode==='late'&&!item.late)return false;
+    if(selectedDay!=='all'&&item.day!==selectedDay)return false;
+    if(subFilter==='北部'||subFilter==='中部'||subFilter==='南部'||subFilter==='那霸市區'){if(item.area!==subFilter)return false;}
+    if(subFilter==='蛋奶素選項'&&!['safe','medium'].includes(item.dietLevel))return false;
+    if(subFilter==='IG 參考'&&!(igGuides[item.query]||[]).length)return false;
+    if(subFilter==='附照片'&&!item.photo)return false;
+    const hay=[item.name,item.area,item.address,item.mapcode,item.desc,item.diet,item.status,...item.tags].join(' ').toLowerCase();
+    return !k||hay.includes(k);
+  });
+  container.innerHTML=arr.length?arr.map(cardHtml).join(''):'<div class="empty">找不到符合條件的地點。可改成「全部」或換關鍵字。</div>';
+  document.getElementById('countPlaces').textContent=arr.length;
+  document.getElementById('countVeg').textContent=arr.filter(x=>['safe','medium'].includes(x.dietLevel)).length;
+  document.getElementById('countPhoto').textContent=arr.filter(x=>x.photo).length;
+}
+function copyText(text){
+  navigator.clipboard?.writeText(text).then(()=>alert(`已複製：${text}`)).catch(()=>prompt('請手動複製：',text));
+}
+renderDayBar();renderFilters();renderRoute();filterData();setTimeout(playCar,450);
+</script>
+</body>
+</html>
