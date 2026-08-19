@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="color-scheme" content="light" />
   <title>沖繩 7 天 6 夜自駕行程｜蛋奶素旅行規劃</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" onerror="this.onerror=null;this.href='https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'" />
   <style>
 
     :root{
@@ -68,9 +69,24 @@
     .route-title{font-family:"Yu Mincho","Hiragino Mincho ProN","Noto Serif TC",serif;font-size:.98rem;font-weight:600;letter-spacing:.025em;color:var(--ink)}
     .route-open{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border:1px solid var(--indigo);background:var(--indigo-deep);color:#fff;font-weight:650;border-radius:2px;padding:7px 11px;font-size:.72rem;cursor:pointer;white-space:nowrap}
     .route-open.is-disabled{opacity:.45;pointer-events:none;background:transparent;color:var(--muted);border-color:var(--line)}
-    .map-shell{height:420px;background:#e8eceb;border:1px solid #d0d6d4;border-radius:2px;overflow:hidden;position:relative}
-    .route-map{width:100%;height:100%;border:0;display:block;background:#e8eceb}
-    .map-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.78rem;pointer-events:none;background:linear-gradient(145deg,#ece9e1,#e2e7e4);z-index:0}
+    .map-shell{height:430px;background:#e8eceb;border:1px solid #d0d6d4;border-radius:2px;overflow:hidden;position:relative}
+    .route-map{width:100%;height:100%;display:block;background:#e8eceb;z-index:1}
+    .map-loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:.78rem;background:linear-gradient(145deg,#ece9e1,#e2e7e4);z-index:4;transition:opacity .2s ease}
+    .map-loading.is-hidden{opacity:0;pointer-events:none}
+    .map-fallback{position:absolute;left:12px;right:12px;bottom:12px;z-index:5;background:rgba(255,254,250,.94);border:1px solid var(--line);padding:9px 10px;font-size:.72rem;color:var(--muted);display:none}
+    .leaflet-container{font-family:"Hiragino Kaku Gothic ProN","Yu Gothic","Noto Sans TC",sans-serif;background:#e8eceb}
+    .leaflet-control-zoom a{color:var(--ink)!important;background:#fffefa!important;border-color:var(--line)!important}
+    .leaflet-control-attribution{font-size:9px!important;background:rgba(255,254,250,.84)!important;color:#817d75!important}
+    .leaflet-control-attribution a{color:#5d6b74!important}
+    .route-number-marker{background:transparent;border:0}
+    .route-number-marker span{display:flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:var(--indigo-deep);color:#fff;border:2px solid #fffefa;box-shadow:0 2px 8px rgba(31,38,47,.25);font-family:Georgia,"Times New Roman",serif;font-size:.78rem;font-weight:700}
+    .route-overview-marker{background:transparent;border:0}
+    .route-overview-marker span{display:block;width:11px;height:11px;border-radius:50%;background:var(--vermillion);border:2px solid #fffefa;box-shadow:0 1px 5px rgba(31,38,47,.25)}
+    .leaflet-popup-content-wrapper{border-radius:2px;background:#fffefa;color:var(--ink);box-shadow:0 5px 20px rgba(40,40,35,.16)}
+    .leaflet-popup-content{margin:12px 14px;line-height:1.55;font-size:.75rem}
+    .map-popup-time{font-family:Georgia,"Times New Roman",serif;color:var(--vermillion);font-weight:700;margin-bottom:2px}
+    .map-popup-name{font-weight:700;margin-bottom:5px}
+    .map-popup-link{display:inline-block;margin-top:6px;color:var(--indigo-deep);font-weight:700;text-decoration:none;border-bottom:1px solid #9aa5ae}
     .route-stops{display:flex;gap:7px;overflow-x:auto;padding:10px 1px 2px;scrollbar-width:none}
     .route-stops::-webkit-scrollbar{display:none}
     .route-stop{display:flex;align-items:center;gap:7px;min-width:max-content;border:1px solid var(--line);background:#fffefa;color:#5f5d57;border-radius:2px;padding:8px 10px;cursor:pointer;text-align:left}
@@ -157,7 +173,7 @@
       .subtitle{font-size:.77rem;line-height:1.65}
       .route-head{align-items:flex-start}
       .route-title{font-size:.88rem;line-height:1.55}
-      .map-shell{height:360px}
+      .map-shell{height:380px}
       .route-head{gap:8px}
       .route-open{padding:7px 9px;font-size:.68rem}
       .route-stop-name{max-width:150px}
@@ -196,15 +212,9 @@
     <a class="route-open" id="routeOpen" href="#">開啟當日完整路線</a>
   </div>
   <div class="map-shell">
-    <div class="map-loading">載入 Google 地圖…</div>
-    <iframe
-      id="routeMapFrame"
-      class="route-map"
-      title="沖繩每日行程地圖"
-      loading="lazy"
-      referrerpolicy="no-referrer-when-downgrade"
-      allowfullscreen
-      src="about:blank"></iframe>
+    <div class="map-loading" id="mapLoading">載入行程地圖…</div>
+    <div id="routeMap" class="route-map" role="application" aria-label="沖繩每日行程互動地圖"></div>
+    <div class="map-fallback" id="mapFallback">地圖圖磚暫時無法載入。下方行程與 Google 導航仍可正常使用。</div>
   </div>
   <div class="route-stops" id="routeStops" aria-label="當日停靠點"></div>
   <div class="route-map-meta">
@@ -227,10 +237,11 @@
 <main id="container"></main>
 
 <footer>
-  上方行程地圖使用 Google Maps 顯示實際位置；「開啟當日完整路線」會依行程順序帶入停靠點。MapCode 仍可能因設施入口或停車場位置不同而有差異。<br>
+  上方行程地圖使用 OpenStreetMap 圖資顯示停靠點與行程順序；路線線條為行程順序示意。「開啟當日完整路線」會交由 Google Maps 依道路狀況計算實際駕車路線。MapCode 仍可能因設施入口或停車場位置不同而有差異。<br>
   景點營業時間、餐廳菜單與交通狀況可能變動，出發前建議再次確認官方資訊。
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js" onerror="this.onerror=null;this.src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'"></script>
 <script>
 const commons = f => `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(f)}?width=1200`;
 const commonsPage = f => `https://commons.wikimedia.org/wiki/File:${encodeURIComponent(f)}`;
@@ -438,19 +449,89 @@ function getRouteItems(){
   if(selectedDay==='all') return [];
   return data.filter(item=>item.day===selectedDay && (currentMode==='main' || item.late!==false));
 }
-function mapEmbedUrl(item){
-  const place=[item.query,item.address,'Okinawa Japan'].filter(Boolean).join(' ');
-  return `https://www.google.com/maps?q=${encodeURIComponent(place)}&output=embed&hl=zh-TW`;
+
+// 行程座標僅用於網頁內的地圖標記與順序線；實際道路導航仍由 Google Maps 計算。
+const placeCoords={
+  'Kokusai Towns Inn Naha':[26.21335,127.68645],
+  'Naminoue Shrine Okinawa':[26.22032,127.67118],
+  '自然派食堂 タマテバコ 那覇':[26.21605,127.69135],
+  'Kokusai Dori Yataimura':[26.21662,127.69022],
+  'Minatogawa Stateside Town':[26.26115,127.71895],
+  'Cape Zanpa Lighthouse':[26.44050,127.71475],
+  'Manzamo Okinawa':[26.50465,127.85035],
+  'AEON MALL Okinawa Rycom':[26.31475,127.79555],
+  'Taco Rice Cafe Kijimuna American Village':[26.31655,127.75665],
+  'Okinawa Churaumi Aquarium':[26.69445,127.87790],
+  'Pizza Cafe Kajinhou Motobu':[26.68685,127.90510],
+  'Bise Fukugi Tree Road':[26.70385,127.88090],
+  'Kouri Bridge Okinawa':[26.70160,128.01790],
+  'DINO Dinosaur PARK Yanbaru Subtropical Forest':[26.62875,127.96920],
+  'Okinawa World Gyokusendo':[26.14015,127.74810],
+  'Chinen Cape Park':[26.16735,127.82955],
+  'Hamabe no Chaya Okinawa':[26.13180,127.77185],
+  'Oujima Island Okinawa':[26.12965,127.76850],
+  'A Happy Pancake Okinawa Umikaji Terrace':[26.17495,127.64620],
+  'Shurijo Castle Park Okinawa':[26.21705,127.71950],
+  'SAN-A Urasoe West Coast PARCO CITY':[26.26015,127.69710],
+  '島唄と地料理 とぅばらーま 国際通り':[26.21510,127.68790],
+  'C&C BREAKFAST OKINAWA':[26.21355,127.68795],
+  'Naha Airport International Terminal':[26.20645,127.64605],
+  'Tsuboya Yachimun Street':[26.21210,127.69290],
+  'T Galleria Okinawa by DFS':[26.22365,127.69680],
+  '樂園CAFÉ Naha Ryubo':[26.21245,127.67920],
+  'Naha Airport':[26.20645,127.64605]
+};
+
+let leafletMap=null;
+let routeLayer=null;
+let routeMarkers=[];
+let activeRouteIndex=0;
+
+function coordFor(item){
+  return placeCoords[item.query] || null;
+}
+function ensureLeafletMap(){
+  const loading=document.getElementById('mapLoading');
+  const fallback=document.getElementById('mapFallback');
+  if(leafletMap) return true;
+  if(typeof L==='undefined'){
+    loading.textContent='地圖元件載入失敗';
+    fallback.style.display='block';
+    return false;
+  }
+  leafletMap=L.map('routeMap',{zoomControl:true,attributionControl:true,preferCanvas:true}).setView([26.40,127.82],9);
+  const tiles=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    maxZoom:19,
+    attribution:'&copy; OpenStreetMap contributors'
+  });
+  tiles.on('load',()=>loading.classList.add('is-hidden'));
+  tiles.on('tileerror',()=>{fallback.style.display='block';loading.classList.add('is-hidden');});
+  tiles.addTo(leafletMap);
+  setTimeout(()=>loading.classList.add('is-hidden'),2200);
+  return true;
+}
+function clearRouteMap(){
+  if(!leafletMap) return;
+  if(routeLayer){ leafletMap.removeLayer(routeLayer); routeLayer=null; }
+  routeMarkers.forEach(m=>leafletMap.removeLayer(m));
+  routeMarkers=[];
+}
+function popupHtml(item,index){
+  const time=currentMode==='late'?(item.lateTime||item.time):item.time;
+  const nav=mapsNavUrl(item.query);
+  return `<div class="map-popup-time">${escapeHtml(time)}</div><div class="map-popup-name">${escapeHtml(item.name)}</div><div>${escapeHtml(item.area)}</div><a class="map-popup-link" href="${nav}" target="_blank" rel="noopener">Google 導航 ↗</a>`;
+}
+function makeNumberIcon(n){
+  return L.divIcon({className:'route-number-marker',html:`<span>${n}</span>`,iconSize:[30,30],iconAnchor:[15,15],popupAnchor:[0,-14]});
+}
+function makeOverviewIcon(){
+  return L.divIcon({className:'route-overview-marker',html:'<span></span>',iconSize:[11,11],iconAnchor:[5,5]});
 }
 function dayRouteUrl(items){
   if(!items || items.length<2) return '';
   const locationText=item=>[item.query,item.address].filter(Boolean).join(', ');
   const params=new URLSearchParams({
-    api:'1',
-    origin:locationText(items[0]),
-    destination:locationText(items[items.length-1]),
-    travelmode:'driving',
-    dir_action:'navigate'
+    api:'1',origin:locationText(items[0]),destination:locationText(items[items.length-1]),travelmode:'driving',dir_action:'navigate'
   });
   const middle=items.slice(1,-1);
   if(middle.length) params.set('waypoints',middle.map(locationText).join('|'));
@@ -459,25 +540,41 @@ function dayRouteUrl(items){
 function showRouteStop(index){
   const items=getRouteItems();
   if(!items.length) return;
-  const item=items[Math.max(0,Math.min(index,items.length-1))];
-  const frame=document.getElementById('routeMapFrame');
-  frame.src=mapEmbedUrl(item);
-  document.querySelectorAll('.route-stop').forEach((b,i)=>b.classList.toggle('active',i===index));
+  const safeIndex=Math.max(0,Math.min(index,items.length-1));
+  const item=items[safeIndex];
+  const coord=coordFor(item);
+  activeRouteIndex=safeIndex;
+  document.querySelectorAll('.route-stop').forEach((b,i)=>b.classList.toggle('active',i===safeIndex));
   const time=currentMode==='late'?(item.lateTime||item.time):item.time;
-  document.getElementById('routeMapStatus').innerHTML=`<b>${String(index+1).padStart(2,'0')}</b> ${escapeHtml(time)}｜${escapeHtml(item.name)}`;
+  document.getElementById('routeMapStatus').innerHTML=`<b>${String(safeIndex+1).padStart(2,'0')}</b> ${escapeHtml(time)}｜${escapeHtml(item.name)}`;
+  if(leafletMap && coord){
+    leafletMap.flyTo(coord,Math.max(leafletMap.getZoom(),13),{duration:.55});
+    if(routeMarkers[safeIndex]) routeMarkers[safeIndex].openPopup();
+  }
+}
+function renderOverview(){
+  if(!ensureLeafletMap()) return;
+  clearRouteMap();
+  const all=data.filter(item=>currentMode==='main'||item.late!==false).filter(item=>coordFor(item));
+  const bounds=[];
+  all.forEach(item=>{
+    const c=coordFor(item); bounds.push(c);
+    const marker=L.marker(c,{icon:makeOverviewIcon(),title:item.name}).addTo(leafletMap).bindPopup(`<div class="map-popup-name">${escapeHtml(item.name)}</div><div>D${item.day}・${escapeHtml(item.area)}</div>`);
+    routeMarkers.push(marker);
+  });
+  if(bounds.length) leafletMap.fitBounds(bounds,{padding:[24,24],maxZoom:10});
 }
 function renderRoute(){
-  const frame=document.getElementById('routeMapFrame');
   const stops=document.getElementById('routeStops');
   const open=document.getElementById('routeOpen');
   const title=document.getElementById('routeTitle');
+  ensureLeafletMap();
   if(selectedDay==='all'){
     title.textContent='7 天 6 夜｜沖繩本島行程總覽';
-    frame.src='https://www.google.com/maps?q='+encodeURIComponent('Okinawa Main Island Japan')+'&output=embed&hl=zh-TW';
-    stops.innerHTML='<div style="font-size:.72rem;color:var(--muted);padding:4px 1px">請選擇上方日期，即可查看該日實際停靠點與完整駕車路線。</div>';
-    open.classList.add('is-disabled');
-    open.removeAttribute('href');
-    document.getElementById('routeMapStatus').innerHTML='<b>MAP</b> 沖繩本島總覽';
+    stops.innerHTML='<div style="font-size:.72rem;color:var(--muted);padding:4px 1px">請選擇上方日期，查看每日停靠點與行程順序。</div>';
+    open.classList.add('is-disabled'); open.removeAttribute('href');
+    document.getElementById('routeMapStatus').innerHTML='<b>MAP</b> 7 天行程地點總覽';
+    renderOverview();
     return;
   }
   const items=getRouteItems();
@@ -488,9 +585,34 @@ function renderRoute(){
     return `<button type="button" class="route-stop ${i===0?'active':''}" onclick="showRouteStop(${i})"><span class="route-stop-num">${i+1}</span><span class="route-stop-text"><span class="route-stop-time">${escapeHtml(time)}</span><span class="route-stop-name">${escapeHtml(item.name)}</span></span></button>`;
   }).join('');
   const url=dayRouteUrl(items);
-  if(url){ open.href=url; open.classList.remove('is-disabled'); }
-  else { open.classList.add('is-disabled'); open.removeAttribute('href'); }
-  if(items.length) showRouteStop(0);
+  if(url){open.href=url;open.removeAttribute('target');open.classList.remove('is-disabled');}
+  else{open.classList.add('is-disabled');open.removeAttribute('href');}
+  if(!ensureLeafletMap()) return;
+  clearRouteMap();
+  const coords=[];
+  items.forEach((item,i)=>{
+    const c=coordFor(item); if(!c) return;
+    coords.push(c);
+    const marker=L.marker(c,{icon:makeNumberIcon(i+1),title:item.name}).addTo(leafletMap).bindPopup(popupHtml(item,i));
+    marker.on('click',()=>{
+      activeRouteIndex=i;
+      document.querySelectorAll('.route-stop').forEach((b,j)=>b.classList.toggle('active',j===i));
+      const time=currentMode==='late'?(item.lateTime||item.time):item.time;
+      document.getElementById('routeMapStatus').innerHTML=`<b>${String(i+1).padStart(2,'0')}</b> ${escapeHtml(time)}｜${escapeHtml(item.name)}`;
+    });
+    routeMarkers.push(marker);
+  });
+  if(coords.length>1){
+    routeLayer=L.polyline(coords,{color:'#405268',weight:4,opacity:.72,dashArray:'8 8',lineCap:'round'}).addTo(leafletMap);
+    leafletMap.fitBounds(L.latLngBounds(coords),{padding:[34,34],maxZoom:13});
+  }else if(coords.length===1){
+    leafletMap.setView(coords[0],14);
+  }
+  if(items.length){
+    const time=currentMode==='late'?(items[0].lateTime||items[0].time):items[0].time;
+    document.getElementById('routeMapStatus').innerHTML=`<b>01</b> ${escapeHtml(time)}｜${escapeHtml(items[0].name)}`;
+  }
+  setTimeout(()=>leafletMap.invalidateSize(),50);
 }
 function badgeStatus(item){ return ''; }
 function dietBadge(item){
