@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <title>連鎖排班系統｜多門市雲端手機版</title>
+  <title>連鎖排班系統｜手機雲端版</title>
 
+  <!-- 引入 Supabase 與截圖工具 -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
@@ -44,7 +45,7 @@
       -webkit-user-select: none;
     }
 
-    /* 頂部導航列 */
+    /* 頂部導覽列 */
     .topbar {
       position: sticky;
       top: 0;
@@ -96,7 +97,7 @@
     .btn-soft { background: var(--accent-soft); border-color: transparent; color: var(--muted); }
     .btn-icon { width: 36px; padding: 0; font-size: 16px; }
 
-    /* 門市資訊標籤 */
+    /* 門市資訊徽章 */
     .branch-badge {
       display: inline-flex;
       align-items: center;
@@ -165,7 +166,7 @@
       border-radius: 6px;
     }
 
-    /* 表格本體 */
+    /* 排班表格 */
     #tableView {
       padding: 10px 8px;
     }
@@ -279,7 +280,7 @@
       outline: none;
     }
 
-    /* 底部手機導航列 */
+    /* 底部導覽列 */
     .bottom-nav {
       position: fixed;
       bottom: 0;
@@ -316,7 +317,7 @@
     .nav-item-icon { font-size: 18px; line-height: 1; }
     .nav-item:active { color: var(--primary); }
 
-    /* 彈窗與遮罩 */
+    /* 彈窗與登入遮罩 */
     .modal {
       display: none;
       position: fixed;
@@ -426,7 +427,7 @@
     </div>
   </div>
 
-  <!-- 頂部月份切換與門市徽章 -->
+  <!-- 頂部月份與門市徽章 -->
   <div class="topbar">
     <div class="month-stepper">
       <button class="btn btn-soft btn-icon" onclick="changeMonth(-1)">‹</button>
@@ -557,9 +558,8 @@
   const SUPABASE_ANON_KEY = 'sb_publishable_Uj1xHvGTdIVK8KVAcd5Q8A_M9uShHfo';
   const db = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  const now = new Date();
-  let currentYear = now.getFullYear();
-  let currentMonth = now.getMonth() + 1;
+  let currentYear = 2026;
+  let currentMonth = 8;
 
   let branchList = [];
   let currentBranch = null;
@@ -595,11 +595,11 @@
   async function verifyBranchLogin() {
     const branchId = document.getElementById('authBranchSelect').value;
     const inputPwd = document.getElementById('authPassword').value.trim();
-    const targetBranch = branchList.find(b => b.id === branchId);
+    const targetBranch = branchList.find(b => String(b.id) === String(branchId));
 
     await loadSuperAdminConfig();
 
-    if (inputPwd === superAdminPwd || (targetBranch && targetBranch.password === inputPwd)) {
+    if (inputPwd === superAdminPwd || (targetBranch && String(targetBranch.password) === String(inputPwd))) {
       if (inputPwd === superAdminPwd) {
         isSuperAdmin = true;
         document.getElementById('adminNavBtn').style.display = 'flex';
@@ -611,12 +611,10 @@
       document.getElementById('authError').style.display = 'none';
       document.getElementById('authPassword').value = '';
 
-      await Promise.allSettled([
-        loadSettings(),
-        loadShiftTypes(),
-        loadBranchStaff(),
-        loadMonthRecords()
-      ]);
+      await loadSettings();
+      await loadShiftTypes();
+      await loadBranchStaff();
+      await loadMonthRecords();
 
       applyUI();
       renderCalendar();
@@ -673,7 +671,7 @@
 
   async function saveSuperAdminPassword() {
     const newPwd = document.getElementById('superAdminNewPwd').value.trim();
-    if (!newPwd) return alert('密碼不能為空');
+    if (!newPwd) return alert('超級密碼不能為空');
     const { error } = await db.from('admin_config').upsert({
       key: 'super_admin_password',
       value: newPwd,
@@ -825,7 +823,6 @@
     if (!currentBranch) return;
     const { data } = await db.from('staff')
       .select('*')
-      .eq('is_active', true)
       .eq('branch_id', currentBranch.id)
       .order('sort_order', { ascending: true });
     staffList = data || [];
@@ -933,6 +930,11 @@
     document.getElementById('dayRow').innerHTML = dayHtml;
 
     rosterBody.innerHTML = '';
+
+    if (staffList.length === 0) {
+      rosterBody.innerHTML = `<tr><td colspan="${daysInMonth + 4}" style="padding:20px; color:var(--muted); font-weight:bold;">此門市尚無人員名單，請點下方「新增人員」</td></tr>`;
+      return;
+    }
 
     staffList.forEach(staff => {
       const tr = document.createElement('tr');
