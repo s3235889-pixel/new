@@ -15,7 +15,7 @@
       --cell-w: 78px;
       --cell-h: 38px;
       --font-s: 13px;
-      --left-w: 88px;
+      --left-w: 92px;
       --right-w: 44px;
       --del-w: 36px;
 
@@ -215,6 +215,7 @@
     #dateRow th { height: calc(38px * var(--zoom)); color: #334155; }
     #dayRow th { font-size: calc(11px * var(--zoom)); }
 
+    /* 放大左側姓名首欄字體 */
     td:first-child, th:first-child {
       position: sticky;
       left: 0;
@@ -224,7 +225,9 @@
       width: calc(var(--left-w) * var(--zoom)) !important;
       min-width: calc(var(--left-w) * var(--zoom)) !important;
       max-width: calc(var(--left-w) * var(--zoom)) !important;
-      font-weight: 800;
+      font-weight: 900;
+      font-size: calc(var(--font-s) * var(--zoom) * 1.25);
+      letter-spacing: 0.03em;
     }
 
     .stat-cell {
@@ -239,6 +242,7 @@
       min-width: calc(var(--right-w) * var(--zoom)) !important;
     }
 
+    /* 放大右側姓名欄字體 */
     .right-name-cell {
       position: sticky;
       right: calc(var(--del-w) * var(--zoom));
@@ -247,7 +251,9 @@
       border-left: 2px solid var(--line-strong);
       width: calc(var(--left-w) * var(--zoom)) !important;
       min-width: calc(var(--left-w) * var(--zoom)) !important;
-      font-weight: 800;
+      font-weight: 900;
+      font-size: calc(var(--font-s) * var(--zoom) * 1.25);
+      letter-spacing: 0.03em;
       padding: 0 4px;
     }
 
@@ -261,6 +267,7 @@
       min-width: calc(var(--del-w) * var(--zoom)) !important;
       color: var(--danger);
       font-weight: 800;
+      font-size: calc(var(--font-s) * var(--zoom) * 1.2);
       cursor: pointer;
     }
 
@@ -458,8 +465,8 @@
     <div class="slider-row">
       <div class="slider-item">
         <span>姓名欄</span>
-        <input type="range" id="nameWidthSlider" min="50" max="150" step="2" value="88" oninput="updateNameWidth(this.value)" />
-        <span id="nameWidthVal" class="slider-val">88px</span>
+        <input type="range" id="nameWidthSlider" min="50" max="160" step="2" value="92" oninput="updateNameWidth(this.value)" />
+        <span id="nameWidthVal" class="slider-val">92px</span>
       </div>
 
       <div class="slider-item">
@@ -568,7 +575,7 @@
   let staffList = [];
   let shiftTypes = [];
   let currentRecords = {};
-  let settings = { name_width: 88, cell_width: 78, zoom: 1.0 };
+  let settings = { name_width: 92, cell_width: 78, zoom: 1.0 };
 
   async function init() {
     await loadSuperAdminConfig();
