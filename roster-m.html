@@ -519,18 +519,18 @@
   <!-- 班別設定彈窗 -->
   <div id="shiftModal" class="modal">
     <div class="modal-content">
-      <h3 style="margin:0 0 4px; font-size:17px;">班別設定</h3>
-      <p style="margin:0 0 12px; font-size:12px; color:var(--muted);">新增或修改班別、顏色與休假計算規則。</p>
+      <h3 style="margin:0 0 4px; font-size:17px;">【<span id="shiftModalBranchTitle">-</span>】班別設定</h3>
+      <p style="margin:0 0 12px; font-size:12px; color:var(--muted);">此處設定僅會套用於當前門市。</p>
 
       <div style="display:grid; grid-template-columns: 1fr 44px 44px; gap:6px; margin-bottom:8px; align-items:center;">
-        <input type="text" id="newShiftLabel" placeholder="名稱，如：早班" style="height:40px; border:1px solid var(--line-strong); border-radius:8px; padding:0 8px; font-weight:bold;" />
+        <input type="text" id="newShiftLabel" placeholder="名稱，如：大夜" style="height:40px; border:1px solid var(--line-strong); border-radius:8px; padding:0 8px; font-weight:bold;" />
         <input type="color" id="newShiftBgColor" value="#e8eef1" style="height:40px; width:44px; border:1px solid var(--line); border-radius:8px; padding:2px;" />
         <label style="font-size:12px; font-weight:bold; display:flex; align-items:center; justify-content:center; gap:2px;">
           <input type="checkbox" id="newShiftIsOff"> 休
         </label>
       </div>
 
-      <button class="btn btn-primary" style="width:100%; height:40px;" onclick="addNewShift()">新增班別</button>
+      <button class="btn btn-primary" style="width:100%; height:40px;" onclick="addNewShift()">新增至此門市</button>
       <div id="existingShiftsList" class="shift-list"></div>
       <button class="btn btn-soft" style="width:100%; height:40px; margin-top:12px;" onclick="closeModal()">完成</button>
     </div>
@@ -614,6 +614,7 @@
 
       currentBranch = targetBranch;
       document.getElementById('currentBranchLabel').innerText = currentBranch.name;
+      document.getElementById('shiftModalBranchTitle').innerText = currentBranch.name;
       document.getElementById('authOverlay').style.display = 'none';
       document.getElementById('authError').style.display = 'none';
       document.getElementById('authPassword').value = '';
@@ -757,18 +758,37 @@
   }
 
   // ==========================================
-  // 班別與人員資料
+  // 班別管理 (嚴格按 Code 與 Label 雙重去重)
   // ==========================================
   async function loadShiftTypes() {
-    const { data } = await db.from('shift_types').select('*').order('sort_order', { ascending: true });
-    const rawList = (data || []).filter(s => s.code && s.code.trim() !== '');
-    shiftTypes = [
-      { id: 'blank-default', code: '', label: '', bg_color: '#ffffff', is_off: false, sort_order: -999 },
-      ...rawList
-    ];
+    if (!currentBranch) return;
+
+    const { data } = await db.from('shift_types')
+      .select('*')
+      .eq('branch_id', currentBranch.id)
+      .order('sort_order', { ascending: true });
+
+    const seenLabels = new Set();
+    const cleanList = [];
+
+    // 加入預設空白
+    cleanList.push({ id: 'blank-default', code: '', label: '', bg_color: '#ffffff', is_off: false });
+    seenLabels.add('');
+
+    (data || []).forEach(item => {
+      const trimmedLabel = (item.label || '').trim();
+      if (item.code && trimmedLabel && !seenLabels.has(trimmedLabel)) {
+        seenLabels.add(trimmedLabel);
+        cleanList.push(item);
+      }
+    });
+
+    shiftTypes = cleanList;
   }
 
   async function addNewShift() {
+    if (!currentBranch) return;
+
     const label = document.getElementById('newShiftLabel').value.trim();
     const color = document.getElementById('newShiftBgColor').value;
     const isOff = document.getElementById('newShiftIsOff').checked;
@@ -778,11 +798,16 @@
     const nextOrder = shiftTypes.length;
 
     const { data, error } = await db.from('shift_types').insert({
-      code, label, bg_color: color, is_off: isOff, sort_order: nextOrder
+      branch_id: currentBranch.id,
+      code,
+      label,
+      bg_color: color,
+      is_off: isOff,
+      sort_order: nextOrder
     }).select().single();
 
     if (!error && data) {
-      shiftTypes.push(data);
+      await loadShiftTypes();
       document.getElementById('newShiftLabel').value = '';
       document.getElementById('newShiftIsOff').checked = false;
       renderShiftList();
@@ -821,11 +846,14 @@
     const target = shiftTypes[index];
     if (!target || !confirm(`確定刪除「${target.label}」？`)) return;
     await db.from('shift_types').delete().eq('id', target.id);
-    shiftTypes.splice(index, 1);
+    await loadShiftTypes();
     renderShiftList();
     renderCalendar();
   }
 
+  // ==========================================
+  // 當前門市人員管理
+  // ==========================================
   async function loadBranchStaff() {
     if (!currentBranch) return;
     const { data } = await db.from('staff')
